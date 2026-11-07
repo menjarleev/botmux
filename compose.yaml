@@ -1,0 +1,21 @@
+# Refs #1: optional agent CLIs and authentication live in botmux-home.
+services:
+  botmux:
+    build: .
+    image: botmux:local
+    restart: unless-stopped
+    stop_grace_period: 2m
+    environment:
+      WEB_HOST: 0.0.0.0
+      WEB_EXTERNAL_HOST: ${WEB_EXTERNAL_HOST:-127.0.0.1}
+      BOTMUX_DASHBOARD_HOST: 0.0.0.0
+    ports:
+      - "127.0.0.1:7891:7891"
+      - "127.0.0.1:8800:8800"
+    volumes:
+      - botmux-home:/home/node
+      - botmux-workspace:/workspace
+
+volumes:
+  botmux-home:
+  botmux-workspace:

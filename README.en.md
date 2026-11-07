@@ -72,6 +72,11 @@ The npm package contains the identical binary with the same commands and capabil
 
 Then DM the bot, or run `botmux dashboard` to create a group and start chatting.
 
+## Docker
+
+For a container runtime with persistent configuration and optional CLI installs,
+see the [Docker guide](docker/README.md).
+
 ## Core Scenarios
 
 - **[Live streaming cards](https://deepcoldy.github.io/botmux/en/cards)** — one live-updating card per turn, relaying the terminal screen verbatim as a screenshot; one tap to show/hide output, scroll, or restart/close/adopt the session.
