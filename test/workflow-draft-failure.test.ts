@@ -129,6 +129,18 @@ describe('raw failure text masking', () => {
     ['a flag at a row\'s end, its value word-wrapped onto the next row',
       '⏺ Bash(botmux setup add --app-id cli_x --app-secret\n      Wm3Kq8Zr5Vx2Lp9Nt6Hb4Jd7Fg1Sc0Ya --verbose)',
       '⏺ Bash(botmux setup add --app-id cli_x --app-secret\n      ‹hidden› --verbose)'],
+    // A TUI breaks a line at the blank before a value, so a quoted value
+    // starts the next row with its opening quote — the shape a real Claude
+    // Code Bash tool call leaves (the flag ends the row, the value quoted).
+    ['a flag at a row\'s end, its quoted value word-wrapped onto the next row',
+      '⏺ Bash(botmux setup add --app-id cli_x --app-secret\n      "Wm3Kq8Zr5Vx2Lp9Nt6Hb4Jd7Fg1Sc0Ya" --verbose)',
+      '⏺ Bash(botmux setup add --app-id cli_x --app-secret\n      ‹hidden› --verbose)'],
+    ['a flag at a TUI row\'s end behind a border, its quoted value on the next row',
+      '│ --app-secret\n│ "Wm3Kq8Zr5Vx2Lp9Nt6Hb4Jd7Fg1Sc0Ya" │',
+      '│ --app-secret\n│ ‹hidden› │'],
+    ['a flag at a row\'s end, its single-quoted value on the next row',
+      "--app-secret\n  'Wm3Kq8Zr5Vx2Lp9Nt6Hb4Jd7Fg1Sc0Ya'",
+      '--app-secret\n  ‹hidden›'],
     ['an argv array printed one element a row', "spawnargs: [\n  '--app-secret',\n  'Qz7Xk9PL2mN4wV8rT3yB6hJ5'\n]",
       "spawnargs: [\n  '--app-secret',\n  ‹hidden›\n]"],
     ['a hard wrap, more arguments after the tail', 'docker run -e ANTHROPIC_API_KEY=Hb4Jd7Fg1Sc0YaWm3Kq8\n3Kq8Zr5Vx2Lp9Nt6 -e FOO=bar image',
