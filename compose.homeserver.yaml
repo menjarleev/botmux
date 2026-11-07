@@ -1,0 +1,9 @@
+# Refs #1: run alongside an existing host installation on separate ports.
+services:
+  botmux:
+    environment:
+      BOTMUX_DASHBOARD_PORT: ${BOTMUX_DASHBOARD_PORT:-18891}
+      WEB_EXTERNAL_PORT: ${BOTMUX_TERMINAL_PORT:-18800}
+    ports: !override
+      - "${BOTMUX_BIND_ADDRESS:-127.0.0.1}:${BOTMUX_DASHBOARD_PORT:-18891}:${BOTMUX_DASHBOARD_PORT:-18891}"
+      - "${BOTMUX_BIND_ADDRESS:-127.0.0.1}:${BOTMUX_TERMINAL_PORT:-18800}:8800"

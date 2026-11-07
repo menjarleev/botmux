@@ -44,6 +44,26 @@ For configuration before service startup, use:
 docker compose run --rm botmux bash
 ```
 
+## Homeserver configuration
+
+To run alongside a host installation, use the separate-port override:
+
+```sh
+docker compose -f compose.yaml -f compose.homeserver.yaml up --build -d
+docker compose -f compose.yaml -f compose.homeserver.yaml exec botmux botmux dashboard
+```
+
+The dashboard uses port 18891 and the first bot terminal uses port 18800.
+Defaults bind to loopback. For LAN access, set `BOTMUX_BIND_ADDRESS` to the
+server's LAN address and `WEB_EXTERNAL_HOST` to that same address in `.env`.
+The dashboard command prints a private admin login link; open it yourself and
+do not paste it into chat. Use the dashboard to configure a new bot and install
+its selected CLI through the container's Terminal page or `exec botmux bash`.
+Keep host bots running until a separate migration is explicitly planned.
+
+Compose must support the `!override` port list. Additional bots need additional
+explicit terminal port mappings as described below.
+
 ## Persistence and lifecycle
 
 `botmux-home` stores configuration, databases, CLI installations and credentials.

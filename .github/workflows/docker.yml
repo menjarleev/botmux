@@ -7,6 +7,7 @@ on:
       - Dockerfile
       - .dockerignore
       - compose.yaml
+      - compose.homeserver.yaml
       - docker/**
       - .github/workflows/docker.yml
       - package.json
@@ -30,5 +31,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - run: docker compose config --quiet
+      - run: docker compose -f compose.yaml -f compose.homeserver.yaml config --quiet
       - run: docker build -t botmux:docker-test .
       - run: sh docker/smoke.sh botmux:docker-test
