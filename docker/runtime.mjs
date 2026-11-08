@@ -42,7 +42,8 @@ function version(value) {
 }
 
 function selected() {
-  return existsSync(current) ? resolve(dirname(current), readlinkSync(current)) : null;
+  return existsSync(current)
+    ? resolve(dirname(current), readlinkSync(current)) : null;
 }
 
 function select(directory) {
@@ -72,8 +73,9 @@ function install(target) {
     ? spawnSync(binary, ['--version'], { encoding: 'utf8' }) : null;
   if (installed?.status !== 0 || installed.stdout.trim() !== target) {
     mkdirSync(directory, { recursive: true });
-    run('npm', ['install', '--global', '--prefix', directory, `botmux@${target}`],
-      600_000);
+    run('npm', [
+      'install', '--global', '--prefix', directory, `botmux@${target}`,
+    ], 600_000);
   }
   const check = spawnSync(binary, ['--version'], { encoding: 'utf8' });
   if (check.status !== 0 || check.stdout.trim() !== target) {
