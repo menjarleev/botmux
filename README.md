@@ -68,6 +68,10 @@ npm 包内包含相同的自包含二进制，安装后命令与行为完全一�
 
 然后私聊机器人、或 `botmux dashboard` 拉个群即可开始对话。
 
+## Docker
+
+容器部署、配置持久化及按需安装 CLI，见 [Docker 指南](docker/README.md)。
+
 ## 核心场景
 
 - **[实时流式卡片](https://deepcoldy.github.io/botmux/cards)** — 每轮对话一张实时刷新的卡片，终端画面原样截图回传；一键显示/隐藏输出、翻屏、重启/关闭/接管会话。

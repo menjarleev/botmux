@@ -1,0 +1,8 @@
+# Only runtime assets belong in this tools image's build context.
+**
+!Dockerfile
+!docker/
+!docker/entrypoint.sh
+!docker/runtime.mjs
+!docker/Dockerfile.network
+!docker/network-guard.sh

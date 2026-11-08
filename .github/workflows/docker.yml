@@ -1,0 +1,39 @@
+name: Docker
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - compose.yaml
+      - compose.homeserver.yaml
+      - compose.isolated.yaml
+      - docker/**
+      - .github/workflows/docker.yml
+      - skills/botmux-docker-runtime/**
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - run: node --test docker/runtime.test.mjs
+      - run: docker compose config --quiet
+      - run: docker compose -f compose.yaml -f compose.homeserver.yaml config --quiet
+      - run: docker compose -f compose.yaml -f compose.homeserver.yaml -f compose.isolated.yaml config --quiet
+      - run: docker build -t botmux:docker-test .
+      - run: sh docker/smoke.sh botmux:docker-test
+      - run: docker build -f docker/Dockerfile.network -t botmux-network-guard:docker-test .
+      - run: sh docker/isolation-smoke.sh botmux:docker-test botmux-network-guard:docker-test
