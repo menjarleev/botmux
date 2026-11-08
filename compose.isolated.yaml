@@ -1,0 +1,39 @@
+# Refs #3: apply after compose.yaml and compose.homeserver.yaml.
+services:
+  botmux:
+    ports: !reset []
+    network_mode: service:network-guard
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      network-guard:
+        condition: service_healthy
+
+  network-guard:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.network
+    image: botmux-network-guard:local
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /run:size=1m
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD-SHELL, "test -f /run/network-ready"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+    ports:
+      - "127.0.0.1:${BOTMUX_DASHBOARD_PORT:-18891}:${BOTMUX_DASHBOARD_PORT:-18891}"
+      - "127.0.0.1:${BOTMUX_TERMINAL_PORT:-18800}:8800"
+
+networks:
+  default:
+    driver: bridge
+    enable_ipv6: false
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "false"
